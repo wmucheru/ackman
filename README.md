@@ -1,3 +1,5 @@
+![Ackman](resources/ackman.png)
+
 # Fundamentals Trading Monitor
 
 Fundamental trading monitor. Fetches data and presents analysis of the current market conditions:
