@@ -3,12 +3,12 @@
 Fundamental trading monitor. Fetches data and presents analysis of the current market conditions:
 
 
-## Features
+### Features
 
 - 
 
 
-## Resources:
+### Resources:
 
 - [FSSI](https://fxssi.com/): Forex sentiment board
 - [SimFin](https://simfin.com/): Free historical fundamental data
