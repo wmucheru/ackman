@@ -2,40 +2,64 @@
 	
 	<?php 
 	
-		$tesla = 'TSLA_2010-2020.json';
+		$series = array('EURUSD_2004-2020.json', 'TSLA_2010-2020.json');
 
-		$data = $this->data_model->getJSONData($tesla);
+		$data = $this->data_model->getJSONData($series[0]);
+		$entries = array();
 
 		# var_dump($data);
+		foreach($data as $i => $d){
+			$d = (object) $d;
+
+			array_push($entries, (object) array(
+				'time'=>date('Y-m-d', strtotime($d->Date)),
+				'open'=>round($d->Open, 5),
+				'high'=>round($d->High, 5),
+				'low'=>round($d->Low, 5),
+				'close'=>round($d->Price, 5)
+			));
+		}
 	
 	?>
 
-	<div id="chart_div" style="width: 900px; height: 500px;"></div>
+	<div id="chart"></div>
 </div>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
 <script type="text/javascript">
-google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawChart);
+const chart = LightweightCharts.createChart(document.getElementById('chart'), {
+	width: window.innerWidth - 50,
+	height: 600,
+	layout: {
+		backgroundColor: '#000000',
+		textColor: 'rgba(255, 255, 255, 0.9)',
+	},
+	grid: {
+		vertLines: {
+			color: 'rgba(0,0,0,0)',
+		},
+		horzLines: {
+			color: '#222222',
+		},
+	},
+	crosshair: {
+		mode: LightweightCharts.CrosshairMode.Normal,
+	},
+	priceScale: {
+		borderColor: 'rgba(197, 203, 206, 0.8)',
+	},
+	timeScale: {
+		borderColor: 'rgba(197, 203, 206, 0.8)',
+	}
+});
+const data = JSON.parse(`<?php echo json_encode($entries) ?>`)
+let candleSeries = chart.addCandlestickSeries({
+	upColor: 'rgba(255, 144, 0, 1)',
+	downColor: '#000',
+	borderDownColor: 'rgba(255, 144, 0, 1)',
+	borderUpColor: 'rgba(255, 144, 0, 1)',
+	wickDownColor: 'rgba(255, 144, 0, 1)',
+	wickUpColor: 'rgba(255, 144, 0, 1)',
+});
 
-function drawChart() {
-	var data = google.visualization.arrayToDataTable([
-		['Mon', 20, 28, 38, 45],
-		['Tue', 31, 38, 55, 66],
-		['Wed', 50, 55, 77, 80],
-		['Thu', 77, 77, 66, 50],
-		['Fri', 68, 66, 22, 15]
-	], true);
-
-	var options = {
-		legend: 'none',
-		// bar: { groupWidth: '100%' }, // Remove space between bars.
-		// candlestick: {
-		// 	fallingColor: { strokeWidth: 0, fill: '#a52714' }, // red
-		// 	risingColor: { strokeWidth: 0, fill: '#0f9d58' }   // green
-		// }
-	};
-
-	var chart = new google.visualization.CandlestickChart(document.getElementById('chart_div'));
-	chart.draw(data, options);
-}
+candleSeries.setData(data);
 </script>
