@@ -61,5 +61,12 @@ let candleSeries = chart.addCandlestickSeries({
 	wickUpColor: 'rgba(255, 144, 0, 1)',
 });
 
+candleSeries.applyOptions({
+    priceFormat: {
+        type: 'price',
+		precision: 4
+    }
+});
+
 candleSeries.setData(data);
 </script>

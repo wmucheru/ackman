@@ -12,4 +12,28 @@ class Data_model extends CI_Model{
 
         return $data;
     }
+
+    /**
+     * 
+     * https://www.alphavantage.co/support/#api-key
+     * 
+    */
+    function getAlphaAdvantageData(){
+        $apiKey = '0U2U2QDSM6MM8O7J';
+        $url = "https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=EUR&to_symbol=USD&apikey=$apiKey";
+
+        return $this->site_model->makeCURLRequest('GET', $url);
+    }
+
+    /**
+     * 
+     * https://www.quandl.com/data/CFTC-Commodity-Futures-Trading-Commission-Reports/documentation
+     * 
+    */
+    function getQuandlData(){
+        $apiKey = 'yXkDQFZwwczSUT9boGoJ';
+        $url = "https://www.quandl.com/data/CFTC?apikey=$apiKey";
+
+        return $this->site_model->makeCURLRequest('GET', $url);
+    }
 }
