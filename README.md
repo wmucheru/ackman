@@ -17,3 +17,4 @@ Fundamental trading monitor. Fetches data and presents analysis of the current m
 - [SimFin](https://simfin.com/): Free historical fundamental data
 - [FSSI](https://fxssi.com/): Forex sentiment board
 - [ProTraders Club](https://protradersclub.com/): Foreign Exchange & Futures Trading
+- [COT Data CFTC](https://www.cftc.gov/MarketReports/CommitmentsofTraders/HistoricalCompressed/index.htm): Commitment of Traders historical data
