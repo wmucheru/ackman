@@ -68,4 +68,173 @@ class Data_model extends CI_Model{
 
         return $this->site_model->makeCURLRequest('GET', $url);
     }
+
+    /**
+     * 
+     * COT Analysis
+     * 
+     * 
+    */
+    function hasCOTEntry($date, $exchange, $asset){
+        return $this->db
+            ->select('id')
+            ->get_where('ack_cot', array(
+                'exchangename'
+            ))
+            ->num_rows() > 0;
+    }
+
+    function addCOTEntry($obj){
+        $d = (object) $obj;
+
+        $exchange = $d->Market_and_Exchange_Names;
+        $asset = '-';
+
+        # Assign symbol
+        switch($exchange){
+
+            case 'EURO FX - CHICAGO MERCANTILE EXCHANGE':
+                $asset = EURUSD;
+                break;
+
+            case 'BRITISH POUND STERLING - CHICAGO MERCANTILE EXCHANGE':
+                $asset = GBPUSD;
+                break;
+
+            case 'AUSTRALIAN DOLLAR - CHICAGO MERCANTILE EXCHANGE':
+                $asset = AUDUSD;
+                break;
+
+            case 'NEW ZEALAND DOLLAR - CHICAGO MERCANTILE EXCHANGE':
+                $asset = NZDUSD;
+                break;
+
+            case 'CANADIAN DOLLAR - CHICAGO MERCANTILE EXCHANGE':
+                $asset = USDCAD;
+                break;
+
+            case 'SWISS FRANC - CHICAGO MERCANTILE EXCHANGE':
+                $asset = USDCHF;
+                break;
+
+            case 'JAPANESE YEN - CHICAGO MERCANTILE EXCHANGE':
+                $asset = USDJPY;
+                break;
+
+            case 'EURO FX/JAPANESE YEN XRATE - CHICAGO MERCANTILE EXCHANGE':
+                $asset = EURJPY;
+                break;
+
+            case 'EURO FX/BRITISH POUND XRATE - CHICAGO MERCANTILE EXCHANGE':
+                $asset = EURGBP;
+                break;
+
+            case 'RUSSIAN RUBLE - CHICAGO MERCANTILE EXCHANGE':
+                $asset = USDRUB;
+                break;
+
+            case 'SOUTH AFRICAN RAND - CHICAGO MERCANTILE EXCHANGE':
+                $asset = USDZAR;
+                break;
+
+            case 'BRAZILIAN REAL - CHICAGO MERCANTILE EXCHANGE':
+                $asset = USDBRL;
+                break;
+
+            case 'MEXICAN PESO - CHICAGO MERCANTILE EXCHANGE':
+                $asset = USDMXN;
+                break;
+
+            case 'DJIA Consolidated - CHICAGO BOARD OF TRADE':
+                $asset = DJI;
+                break;
+
+            case 'DOW JONES INDUSTRIAL AVG- x $5 - CHICAGO BOARD OF TRADE':
+                $asset = DJIA;
+                break;
+
+            case 'DOW JONES U.S. REAL ESTATE IDX - CHICAGO BOARD OF TRADE':
+                $asset = DJUSRE;
+                break;
+
+            case 'S&P 500 STOCK INDEX - CHICAGO MERCANTILE EXCHANGE':
+                $asset = SPX;
+                break;
+
+            case 'NASDAQ-100 Consolidated - CHICAGO MERCANTILE EXCHANGE':
+                $asset = NDX;
+                break;
+
+            case 'NASDAQ-100 STOCK INDEX (MINI) - CHICAGO MERCANTILE EXCHANGE':
+                $asset = NQ1;
+                break;
+
+            case 'E-MINI RUSSELL 2000 INDEX - CHICAGO MERCANTILE EXCHANGE':
+                $asset = RTYM20;
+                break;
+
+            case 'NIKKEI STOCK AVERAGE - CHICAGO MERCANTILE EXCHANGE':
+                $asset = NI225;
+                break;
+
+            case 'U.S. DOLLAR INDEX - ICE FUTURES U.S.':
+                $asset = DXY;
+                break;
+
+            case 'VIX FUTURES - CBOE FUTURES EXCHANGE':
+                $asset = VIX;
+                break;
+        }
+
+        $entry = array(
+            'exchangename'=>$exchange,
+            'asset'=>$asset,
+            'reportdate'=>date('Y-m-d', strtotime($d->Report_Date_as_MM_DD_YYYY)),
+            'levlong'=>$d->Lev_Money_Positions_Long_All,
+            'levshort'=>$d->Lev_Money_Positions_Short_All,
+            'changelevlong'=>$d->Change_in_Lev_Money_Long_All,
+            'changelevshort'=>$d->Change_in_Lev_Money_Short_All,
+            'poichangelevlong'=>$d->Pct_of_OI_Lev_Money_Long_All,
+            'poichangelevshort'=>$d->Pct_of_OI_Lev_Money_Short_All
+        );
+
+        $this->db->insert('ack_cot', $entry);
+    }
+
+    /**
+     * 
+     * Fetch COT data within givn parameters
+     * 
+    */
+    function getCOTData($id='', $asset='', $exchange='', $limit=1000){
+        $this->db
+            ->select('
+                id, exchangename AS ex, reportdate AS dt, levlong, levshort,
+                changelevlong AS clevlong, changelevshort AS clevshort, 
+                poichangelevlong AS pclevlong, poichangelevshort AS pclevshort'
+            )
+            ->from('ack_cot')
+            ->limit($limit)
+            ->order_by('id', 'DESC');
+
+        if($id != ''){
+            $this->db->where('id', $id);
+        }
+
+        if($exchange != ''){
+            $this->db->where('exchangename', $exchange);
+        }
+
+        if($asset != ''){
+            $this->db->where('asset', $asset);
+        }
+
+        $q = $this->db->get();
+
+        return $id != '' ? $q->row() : $q->result();
+    }
+
+    function getAssetCOTData($asset, $limit=''){
+        return $this->getCOTData('', $asset, '', $limit);
+    }
 }
