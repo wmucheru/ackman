@@ -4,7 +4,7 @@
 	
 		$series = array('EURUSD_2004-2020.json', 'TSLA_2010-2020.json');
 
-		$data = $this->data_model->getJSONData($series[0]);
+		$data = $this->data_model->loadFXData($series[0]);
 		$entries = array();
 
 		# var_dump($data);

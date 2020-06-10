@@ -38,11 +38,12 @@ class Data_model extends CI_Model{
         parent::__construct();
     }
 
-    function getJSONData($fileName){
-        $json = file_get_contents(base_url('data/json/'. $fileName));
-        $data = json_decode($json, true);
+    function loadFXData($fileName){
+        return json_decode(file_get_contents(base_url('data/fx/json/'. $fileName)));
+    }
 
-        return $data;
+    function loadCOTData($fileName){
+        return json_decode(file_get_contents(base_url('data/cot/json/'. $cot[4])));
     }
 
     /**
@@ -71,6 +72,50 @@ class Data_model extends CI_Model{
 
     /**
      * 
+     * FOREX
+     * 
+     * 
+    */
+    function hasFXEntry($assetId='', $interval='', $recordTime=''){
+        return $this->db
+            ->select('id')
+            ->get_where('ack_assetdata', array(
+                'assetid'=>$assetId,
+                'interval'=>$interval,
+                'recordtime'=>$recordTime
+            ))
+            ->num_rows() > 0;
+    }
+
+    function getFXData($id='', $asset='', $limit=1000){
+        $this->db
+            ->select('
+                d.id, d.interval, d.open, d.high, d.low, d.close, d.recordtime'
+            )
+            ->from('ack_assetdata d')
+            ->join('ack_assets a', 'a.id = d.assetid', 'left')
+            ->limit($limit)
+            ->order_by('d.id', 'DESC');
+
+        if($id != ''){
+            $this->db->where('d.id', $id);
+        }
+
+        if($asset != ''){
+            $this->db->where('symbol', $asset);
+        }
+
+        $q = $this->db->get();
+
+        return $id != '' ? $q->row() : $q->result();
+    }
+
+    function getAssetFXData($asset){
+        return $this->getFXData('', $asset);
+    }
+
+    /**
+     * 
      * COT Analysis
      * 
      * 
@@ -79,7 +124,9 @@ class Data_model extends CI_Model{
         return $this->db
             ->select('id')
             ->get_where('ack_cot', array(
-                'exchangename'
+                'reportdate'=>$date,
+                'exchangename'=>$exchange,
+                'asset'=>$asset
             ))
             ->num_rows() > 0;
     }
@@ -203,13 +250,13 @@ class Data_model extends CI_Model{
 
     /**
      * 
-     * Fetch COT data within givn parameters
+     * Fetch COT data within provided parameters
      * 
     */
     function getCOTData($id='', $asset='', $exchange='', $limit=1000){
         $this->db
             ->select('
-                id, exchangename AS ex, reportdate AS dt, levlong, levshort,
+                id, asset, reportdate AS dt, levlong, levshort,
                 changelevlong AS clevlong, changelevshort AS clevshort, 
                 poichangelevlong AS pclevlong, poichangelevshort AS pclevshort'
             )

@@ -31,3 +31,4 @@ Commitment of Traders:
 
 - [CFTC](https://www.cftc.gov/MarketReports/CommitmentsofTraders/HistoricalCompressed/index.htm)
 - [Tradingster](https://www.tradingster.com/cot)
+- [OANDA](https://www1.oanda.com/forex-trading/analysis/commitments-of-traders)

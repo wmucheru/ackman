@@ -9,17 +9,9 @@ class Site extends CI_Controller {
     
     function importCOT(){
         /*
-        $cot = array(
-            'F_TFF_2006_2016.json', 
-            'FinFutYY-2017.json', 
-            'FinFutYY-2018.json', 
-            'FinFutYY-2019.json', 
-            'FinFutYY-2020.json'
-        );
+        $data = $this->data_model->loadCOTData('FinFutYY-2020.json');
 
-        $json = json_decode(file_get_contents(base_url('data/cot/json/'. $cot[4])));
-
-        foreach($json as $d){
+        foreach($data as $d){
             $this->data_model->addCOTEntry($d);
         }
         */
@@ -27,6 +19,34 @@ class Site extends CI_Controller {
         $cot = $this->data_model->getAssetCOTData('vix', 20);
 
         $this->site_model->returnJSON($cot);
+    }
+
+    function importFX(){
+        /*
+        $data = $this->data_model->loadFXData('EURUSD_2004-2020.json');
+
+		foreach($data as $i => $d){
+            $d = (object) $d;
+            
+            $fx = array(
+                'assetid'=>1,
+                'interval'=>'daily',
+
+				'open'=>round($d->Open, 5),
+				'high'=>round($d->High, 5),
+				'low'=>round($d->Low, 5),
+				'close'=>round($d->Price, 5),
+                'recordtime'=>date('Y-m-d', strtotime($d->Date)),
+                'createdby'=>1
+            );
+            
+            $this->db->insert('ack_assetdata', $fx);
+        }
+        */
+        
+        $fx = $this->data_model->getAssetFXData(EURUSD);
+
+        $this->site_model->returnJSON($fx);
     }
 
 	/**
