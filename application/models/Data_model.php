@@ -1,5 +1,22 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * 
+ * Model Constants
+ * 
+*/
+
+# Intervals
+define('DAILY', 'daily');
+define('WEEKLY', 'weekly');
+define('MONTHLY', 'monthly');
+
+/**
+ * 
+ * Tradeable Assets
+ * 
+*/
+
 # FX
 define('EURUSD', 'eurusd');
 define('GBPUSD', 'gbpusd');
@@ -30,6 +47,8 @@ define('NI225', 'ni225');
 
 # Bonds
 define('US10Y', 'us10y');
+
+
 
 
 class Data_model extends CI_Model{

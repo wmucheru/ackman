@@ -16,7 +16,7 @@ class Site extends CI_Controller {
         }
         */
 
-        $cot = $this->data_model->getAssetCOTData('vix', 20);
+        $cot = $this->data_model->getAssetCOTData(EURUSD, 20);
 
         $this->site_model->returnJSON($cot);
     }
@@ -30,7 +30,7 @@ class Site extends CI_Controller {
             
             $fx = array(
                 'assetid'=>1,
-                'interval'=>'daily',
+                'interval'=>DAILY,
 
 				'open'=>round($d->Open, 5),
 				'high'=>round($d->High, 5),
