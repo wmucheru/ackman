@@ -1,5 +1,37 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+# FX
+define('EURUSD', 'eurusd');
+define('GBPUSD', 'gbpusd');
+define('AUDUSD', 'audusd');
+define('NZDUSD', 'nzdusd');
+define('USDCAD', 'usdcad');
+define('USDCHF', 'usdchf');
+define('USDJPY', 'usdjpy');
+define('EURJPY', 'eurjpy');
+define('EURGBP', 'eurgbp');
+define('USDRUB', 'usdrub');
+define('USDZAR', 'usdzar');
+define('USDBRL', 'usdbrl');
+define('USDMXN', 'usdmxn');
+
+define('VIX', 'vix');
+define('DXY', 'dxy');
+
+# Stocks / Indices
+define('DJI', 'dji');
+define('DJIA', 'djia');
+define('DJUSRE', 'djusre');
+define('SPX', 'spx');
+define('NDX', 'ndx');
+define('NQ1', 'nq1!');
+define('RTYM20', 'rtym20');
+define('NI225', 'ni225');
+
+# Bonds
+define('US10Y', 'us10y');
+
+
 class Data_model extends CI_Model{
 
 	public function __construct(){
