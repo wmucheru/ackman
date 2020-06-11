@@ -48,9 +48,6 @@ define('NI225', 'ni225');
 # Bonds
 define('US10Y', 'us10y');
 
-
-
-
 class Data_model extends CI_Model{
 
 	public function __construct(){
@@ -300,7 +297,7 @@ class Data_model extends CI_Model{
         return $id != '' ? $q->row() : $q->result();
     }
 
-    function getAssetCOTData($asset, $limit=''){
+    function getAssetCOTData($asset, $limit=1000){
         return $this->getCOTData('', $asset, '', $limit);
     }
 }

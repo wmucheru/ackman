@@ -1,34 +1,74 @@
 <div class="container">
 	
-	<?php 
-	
-		$series = array('EURUSD_2004-2020.json', 'TSLA_2010-2020.json');
+    <?php 
+        $symbol = EURUSD;
 
-		$data = $this->data_model->loadFXData($series[0]);
+		$fx = $this->data_model->getAssetFXData($symbol);
 		$entries = array();
 
-		# var_dump($data);
-		foreach($data as $i => $d){
-			$d = (object) $d;
+		foreach($fx as $f){
 
-			array_push($entries, (object) array(
-				'time'=>date('Y-m-d', strtotime($d->Date)),
-				'open'=>round($d->Open, 5),
-				'high'=>round($d->High, 5),
-				'low'=>round($d->Low, 5),
-				'close'=>round($d->Price, 5)
+			array_push($entries, array(
+				'time'=>$f->recordtime,
+				'open'=>round($f->open, 5),
+				'high'=>round($f->high, 5),
+				'low'=>round($f->low, 5),
+				'close'=>round($f->close, 5)
 			));
-		}
+        }
+        
+        $cot = $this->data_model->getAssetCOTData($symbol);
 	
 	?>
 
-	<div id="chart"></div>
+    <div class="clearfix">
+        <h3><?php echo strtoupper($symbol) ?></h3>
+    
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#currency" data-toggle="tab">Currency</a>
+            </li>
+
+            <li>
+                <a href="#cot" data-toggle="tab">COT Analysis</a>
+            </li>
+            
+            <li>
+                <a href="#volatility" data-toggle="tab">Volatility</a>
+            </li>
+            
+            <li>
+                <a href="#watchlist" data-toggle="tab">Watchlist</a>
+            </li>
+        </ul>
+    
+        <div class="tab-content">
+            <div class="tab-pane active" id="currency">
+                <div id="chart"></div>
+            </div>
+
+            <div class="tab-pane" id="cot">
+                <?php var_dump($cot) ?>
+            </div>
+
+            <div class="tab-pane" id="volatility">
+                VOL
+            </div>
+
+            <div class="tab-pane" id="watchlist">
+                <div class="alert alert-info">
+                    No items in watchlist
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 <script type="text/javascript" src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
 <script type="text/javascript">
 const chart = LightweightCharts.createChart(document.getElementById('chart'), {
-	width: window.innerWidth - 50,
-	height: 600,
+	width: 1024,
+	height: 540,
 	layout: {
 		backgroundColor: '#000000',
 		textColor: 'rgba(255, 255, 255, 0.9)',
