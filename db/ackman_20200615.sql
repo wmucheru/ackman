@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.20, for Linux (x86_64)
 --
 -- Host: localhost    Database: ackman
 -- ------------------------------------------------------
--- Server version	5.7.23
+-- Server version	8.0.20-0ubuntu0.20.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -21,10 +21,10 @@
 
 DROP TABLE IF EXISTS `ack_assetdata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ack_assetdata` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `assetid` int(11) NOT NULL,
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `assetid` int NOT NULL,
   `interval` enum('15min','1hr','4hr','daily','weekly','monthly') NOT NULL,
   `open` double NOT NULL,
   `high` double NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE `ack_assetdata` (
   `close` double NOT NULL,
   `recordtime` datetime DEFAULT CURRENT_TIMESTAMP,
   `createdon` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `createdby` int(3) DEFAULT NULL,
+  `createdby` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4288 DEFAULT CHARSET=latin1;
@@ -54,17 +54,17 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ack_assets`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ack_assets` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
   `asset` varchar(64) NOT NULL,
   `symbol` varchar(32) NOT NULL,
   `description` text,
   `createdon` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `createdby` int(3) DEFAULT NULL,
+  `createdby` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -73,7 +73,7 @@ CREATE TABLE `ack_assets` (
 
 LOCK TABLES `ack_assets` WRITE;
 /*!40000 ALTER TABLE `ack_assets` DISABLE KEYS */;
-INSERT INTO `ack_assets` VALUES (1,'EURUSD','eurusd',NULL,'2020-06-11 01:55:23',1);
+INSERT INTO `ack_assets` VALUES (1,'EURUSD','eurusd',NULL,'2020-06-11 01:55:23',1),(2,'GBPUSD','gbpusd',NULL,'2020-06-15 17:12:50',1),(3,'AUDUSD','audusd',NULL,'2020-06-15 17:12:50',1),(4,'NZDUSD','nzdusd',NULL,'2020-06-15 17:12:50',1),(5,'USDCAD','usdcad',NULL,'2020-06-15 17:12:50',1),(6,'USDCHF','usdchf',NULL,'2020-06-15 17:12:50',1),(7,'USDJPY','usdjpy',NULL,'2020-06-15 17:12:50',1),(8,'EURJPY','eurjpy',NULL,'2020-06-15 17:12:50',1),(9,'EURGBP','eurgbp',NULL,'2020-06-15 17:12:50',1),(10,'USDRUB','usdrub',NULL,'2020-06-15 17:12:50',1),(11,'USDZAR','usdzar',NULL,'2020-06-15 17:12:50',1),(12,'USDBRL','usdbrl',NULL,'2020-06-15 17:12:50',1),(13,'USDMXN','usdmxn',NULL,'2020-06-15 17:12:50',1),(14,'VIX','vix',NULL,'2020-06-15 17:12:50',1),(15,'DXY','dxy',NULL,'2020-06-15 17:12:50',1),(16,'DJI','dji',NULL,'2020-06-15 17:17:46',1),(17,'DJIA','djia',NULL,'2020-06-15 17:17:46',1),(18,'DJUSRE','djusre',NULL,'2020-06-15 17:17:46',1),(19,'SPX','spx',NULL,'2020-06-15 17:17:46',1),(20,'NDX','ndx',NULL,'2020-06-15 17:17:46',1),(21,'NQ1','nq1',NULL,'2020-06-15 17:17:46',1),(22,'RTYM20','rtym20',NULL,'2020-06-15 17:17:46',1),(23,'NI225','ni225',NULL,'2020-06-15 17:17:46',1),(24,'US10Y','us10y',NULL,'2020-06-15 17:17:46',1);
 /*!40000 ALTER TABLE `ack_assets` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -83,20 +83,20 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ack_cot`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ack_cot` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
   `exchangename` varchar(192) NOT NULL COMMENT 'Market_and_Exchange_Names',
   `asset` varchar(16) NOT NULL,
   `reportdate` date NOT NULL COMMENT 'Report_Date_as_MM_DD_YYYY',
-  `levlong` int(11) NOT NULL COMMENT 'Lev_Money_Positions_Long_All',
-  `levshort` int(11) NOT NULL COMMENT 'Lev_Money_Positions_Short_All',
-  `changelevlong` int(11) NOT NULL COMMENT 'Change_in_Lev_Money_Long_All',
-  `changelevshort` int(11) NOT NULL COMMENT 'Change_in_Lev_Money_Short_All',
+  `levlong` int NOT NULL COMMENT 'Lev_Money_Positions_Long_All',
+  `levshort` int NOT NULL COMMENT 'Lev_Money_Positions_Short_All',
+  `changelevlong` int NOT NULL COMMENT 'Change_in_Lev_Money_Long_All',
+  `changelevshort` int NOT NULL COMMENT 'Change_in_Lev_Money_Short_All',
   `poichangelevlong` double NOT NULL COMMENT 'Pct_of_OI_Lev_Money_Long_All',
   `poichangelevshort` double NOT NULL COMMENT 'Pct_of_OI_Lev_Money_Short_All',
   `createdon` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `createdby` int(3) DEFAULT NULL,
+  `createdby` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12926 DEFAULT CHARSET=latin1;
@@ -119,11 +119,11 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ack_journal`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ack_journal` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `userid` int(11) NOT NULL,
-  `assetid` int(11) NOT NULL,
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `userid` int NOT NULL,
+  `assetid` int NOT NULL,
   `contracttype` varchar(32) NOT NULL,
   `openprice` double NOT NULL,
   `opendate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -133,7 +133,7 @@ CREATE TABLE `ack_journal` (
   `description` text,
   `spread` double DEFAULT NULL,
   `createdon` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `createdby` int(3) NOT NULL,
+  `createdby` int NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -157,4 +157,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-06-11  2:23:21
+-- Dump completed on 2020-06-15 17:42:56
