@@ -152,100 +152,124 @@ class Data_model extends CI_Model{
 
         $exchange = $d->Market_and_Exchange_Names;
         $asset = '-';
+        $assetId = '';
 
         # Assign symbol
         switch($exchange){
 
             case 'EURO FX - CHICAGO MERCANTILE EXCHANGE':
                 $asset = EURUSD;
+                $assetId = 1;
                 break;
 
             case 'BRITISH POUND STERLING - CHICAGO MERCANTILE EXCHANGE':
                 $asset = GBPUSD;
+                $assetId = 2;
                 break;
 
             case 'AUSTRALIAN DOLLAR - CHICAGO MERCANTILE EXCHANGE':
                 $asset = AUDUSD;
+                $assetId = 3;
                 break;
 
             case 'NEW ZEALAND DOLLAR - CHICAGO MERCANTILE EXCHANGE':
                 $asset = NZDUSD;
+                $assetId = 4;
                 break;
 
             case 'CANADIAN DOLLAR - CHICAGO MERCANTILE EXCHANGE':
                 $asset = USDCAD;
+                $assetId = 5;
                 break;
 
             case 'SWISS FRANC - CHICAGO MERCANTILE EXCHANGE':
                 $asset = USDCHF;
+                $assetId = 6;
                 break;
 
             case 'JAPANESE YEN - CHICAGO MERCANTILE EXCHANGE':
                 $asset = USDJPY;
+                $assetId = 7;
                 break;
 
             case 'EURO FX/JAPANESE YEN XRATE - CHICAGO MERCANTILE EXCHANGE':
                 $asset = EURJPY;
+                $assetId = 8;
                 break;
 
             case 'EURO FX/BRITISH POUND XRATE - CHICAGO MERCANTILE EXCHANGE':
                 $asset = EURGBP;
+                $assetId = 9;
                 break;
 
             case 'RUSSIAN RUBLE - CHICAGO MERCANTILE EXCHANGE':
                 $asset = USDRUB;
+                $assetId = 10;
                 break;
 
             case 'SOUTH AFRICAN RAND - CHICAGO MERCANTILE EXCHANGE':
                 $asset = USDZAR;
+                $assetId = 11;
                 break;
 
             case 'BRAZILIAN REAL - CHICAGO MERCANTILE EXCHANGE':
                 $asset = USDBRL;
+                $assetId = 12;
                 break;
 
             case 'MEXICAN PESO - CHICAGO MERCANTILE EXCHANGE':
                 $asset = USDMXN;
-                break;
-
-            case 'DJIA Consolidated - CHICAGO BOARD OF TRADE':
-                $asset = DJI;
-                break;
-
-            case 'DOW JONES INDUSTRIAL AVG- x $5 - CHICAGO BOARD OF TRADE':
-                $asset = DJIA;
-                break;
-
-            case 'DOW JONES U.S. REAL ESTATE IDX - CHICAGO BOARD OF TRADE':
-                $asset = DJUSRE;
-                break;
-
-            case 'S&P 500 STOCK INDEX - CHICAGO MERCANTILE EXCHANGE':
-                $asset = SPX;
-                break;
-
-            case 'NASDAQ-100 Consolidated - CHICAGO MERCANTILE EXCHANGE':
-                $asset = NDX;
-                break;
-
-            case 'NASDAQ-100 STOCK INDEX (MINI) - CHICAGO MERCANTILE EXCHANGE':
-                $asset = NQ1;
-                break;
-
-            case 'E-MINI RUSSELL 2000 INDEX - CHICAGO MERCANTILE EXCHANGE':
-                $asset = RTYM20;
-                break;
-
-            case 'NIKKEI STOCK AVERAGE - CHICAGO MERCANTILE EXCHANGE':
-                $asset = NI225;
+                $assetId = 13;
                 break;
 
             case 'U.S. DOLLAR INDEX - ICE FUTURES U.S.':
                 $asset = DXY;
+                $assetId = 14;
                 break;
 
             case 'VIX FUTURES - CBOE FUTURES EXCHANGE':
                 $asset = VIX;
+                $assetId = 15;
+                break;
+
+            case 'DJIA Consolidated - CHICAGO BOARD OF TRADE':
+                $asset = DJI;
+                $assetId = 16;
+                break;
+
+            case 'DOW JONES INDUSTRIAL AVG- x $5 - CHICAGO BOARD OF TRADE':
+                $asset = DJIA;
+                $assetId = 17;
+                break;
+
+            case 'DOW JONES U.S. REAL ESTATE IDX - CHICAGO BOARD OF TRADE':
+                $asset = DJUSRE;
+                $assetId = 18;
+                break;
+
+            case 'S&P 500 STOCK INDEX - CHICAGO MERCANTILE EXCHANGE':
+                $asset = SPX;
+                $assetId = 19;
+                break;
+
+            case 'NASDAQ-100 Consolidated - CHICAGO MERCANTILE EXCHANGE':
+                $asset = NDX;
+                $assetId = 20;
+                break;
+
+            case 'NASDAQ-100 STOCK INDEX (MINI) - CHICAGO MERCANTILE EXCHANGE':
+                $asset = NQ1;
+                $assetId = 21;
+                break;
+
+            case 'E-MINI RUSSELL 2000 INDEX - CHICAGO MERCANTILE EXCHANGE':
+                $asset = RTYM20;
+                $assetId = 22;
+                break;
+
+            case 'NIKKEI STOCK AVERAGE - CHICAGO MERCANTILE EXCHANGE':
+                $asset = NI225;
+                $assetId = 23;
                 break;
         }
 
@@ -272,24 +296,29 @@ class Data_model extends CI_Model{
     function getCOTData($id='', $asset='', $exchange='', $limit=1000){
         $this->db
             ->select('
-                id, asset, reportdate AS dt, levlong, levshort,
-                changelevlong AS clevlong, changelevshort AS clevshort, 
-                poichangelevlong AS pclevlong, poichangelevshort AS pclevshort'
+                c.id, c.asset, c.reportdate AS dt, c.levlong, c.levshort,
+                c.changelevlong AS clevlong, c.changelevshort AS clevshort, 
+                c.poichangelevlong AS pclevlong, c.poichangelevshort AS pclevshort,
+                
+                d.close AS price'
             )
-            ->from('ack_cot')
+            ->from('ack_cot c')
+            ->join('ack_assets a', 'a.symbol = c.asset', 'left')
+            ->join('ack_assetdata d', 'd.assetid = a.id', 'left')
+            ->where('d.recordtime = c.reportdate')
             ->limit($limit)
-            ->order_by('id', 'DESC');
+            ->order_by('reportdate', 'DESC');
 
         if($id != ''){
-            $this->db->where('id', $id);
+            $this->db->where('c.id', $id);
         }
 
         if($exchange != ''){
-            $this->db->where('exchangename', $exchange);
+            $this->db->where('c.exchangename', $exchange);
         }
 
         if($asset != ''){
-            $this->db->where('asset', $asset);
+            $this->db->where('c.asset', $asset);
         }
 
         $q = $this->db->get();

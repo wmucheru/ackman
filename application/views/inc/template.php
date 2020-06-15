@@ -59,7 +59,7 @@
     $styles = array(
         'assets/css/bootstrap.min.css',
         'assets/css/ionicons.min.css',
-        'https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap"',
+        'https://fonts.googleapis.com/css2?family=Roboto&display=swap"',
         'assets/css/bootstrap-datepicker.min.css',
         'assets/plugins/timepicker/jquery.timepicker.min.css',
         'assets/css/style.css?t='. date('His')

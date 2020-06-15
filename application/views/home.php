@@ -23,6 +23,16 @@
 
     <div class="clearfix">
         <h3><?php echo strtoupper($symbol) ?></h3>
+
+		<?php
+
+
+			echo form_open('', 'class="form-inline"');
+
+			
+
+			echo form_close();
+		?>
     
         <ul class="nav nav-tabs">
             <li class="active">
@@ -48,7 +58,61 @@
             </div>
 
             <div class="tab-pane" id="cot">
-                <?php var_dump($cot) ?>
+				<?php 
+					# var_dump($cot)
+					
+					if(empty($cot)){
+						echo '<div class="alret alert-warning">No COT data available</div>';
+					}
+					else{
+				?>
+				<table class="table table-bordered dt">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Long</th>
+							<th>Short</th>
+							<th>Change Long</th>
+							<th>Change Short</th>
+							<th>%OI Change Long</th>
+							<th>%OI Change Short</th>
+							<th>%Flip</th>
+							<th>Price</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php 
+							foreach($cot as $c){
+								$pChangeLong = $c->pclevlong;
+								$pChangeShort = $c->pclevshort;
+
+								$flipChange = $pChangeLong - $pChangeShort;
+								$flip = $pChangeLong > $pChangeShort ? 
+									"<span class=\"label label-success\">$flipChange</span>" : 
+									"<span class=\"label label-danger\">$flipChange</span>";
+						?>
+						<tr>
+							<td><?php echo $c->dt ?></td>
+							<td><?php echo $c->levlong ?></td>
+							<td><?php echo $c->levshort ?></td>
+							<td><?php echo $c->clevlong ?></td>
+							<td><?php echo $c->clevshort ?></td>
+							<td><?php echo $pChangeLong ?></td>
+							<td><?php echo $pChangeShort ?></td>
+							<td><?php echo $flip ?></td>
+							<td><?php echo $c->price ?></td>
+						</tr>
+						<?php 
+							}
+						?>
+					</tbody>
+				</table>
+
+				<hr/>
+
+				<?php
+					} # ENDFOR: Show COT data if available
+				?>
             </div>
 
             <div class="tab-pane" id="volatility">
