@@ -44,7 +44,7 @@ class Site extends CI_Controller {
         }
         */
         
-        $fx = $this->data_model->getAssetFXData(EURUSD);
+        $fx = $this->data_model->getAssetPriceData(EURUSD);
 
         $this->site_model->returnJSON($fx);
     }

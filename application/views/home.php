@@ -3,7 +3,7 @@
     <?php 
         $symbol = EURUSD;
 
-		$fx = $this->data_model->getAssetFXData($symbol);
+		$fx = $this->data_model->getAssetPriceData($symbol);
 		$entries = array();
 
 		foreach($fx as $f){
@@ -109,7 +109,7 @@
 				<hr/>
 
 				<?php
-					} # ENDFOR: Show COT data if available
+					} # ENDFOR: Show Chart data if available
 				?>
             </div>
 

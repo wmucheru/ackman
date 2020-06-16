@@ -88,11 +88,11 @@ class Data_model extends CI_Model{
 
     /**
      * 
-     * FOREX
+     * Asset Price Data
      * 
      * 
     */
-    function hasFXEntry($assetId='', $interval='', $recordTime=''){
+    function hasAssetData($assetId='', $interval='', $recordTime=''){
         return $this->db
             ->select('id')
             ->get_where('ack_assetdata', array(
@@ -103,7 +103,7 @@ class Data_model extends CI_Model{
             ->num_rows() > 0;
     }
 
-    function getFXData($id='', $asset='', $limit=1000){
+    function getAssetData($id='', $asset='', $limit=1000){
         $this->db
             ->select('
                 d.id, d.interval, d.open, d.high, d.low, d.close, d.recordtime'
@@ -126,8 +126,8 @@ class Data_model extends CI_Model{
         return $id != '' ? $q->row() : $q->result();
     }
 
-    function getAssetFXData($asset){
-        return $this->getFXData('', $asset);
+    function getAssetPriceData($asset){
+        return $this->getAssetData('', $asset);
     }
 
     /**
