@@ -111,7 +111,7 @@ class Data_model extends CI_Model{
             ->from('ack_assetdata d')
             ->join('ack_assets a', 'a.id = d.assetid', 'left')
             ->limit($limit)
-            ->order_by('d.id', 'DESC');
+            ->order_by('d.recordtime', 'DESC');
 
         if($id != ''){
             $this->db->where('d.id', $id);

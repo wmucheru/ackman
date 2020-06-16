@@ -36,12 +36,16 @@
     
         <ul class="nav nav-tabs">
             <li class="active">
-                <a href="#currency" data-toggle="tab">Currency</a>
+                <a href="#price-chart" data-toggle="tab">Price Chart</a>
             </li>
 
             <li>
-                <a href="#cot" data-toggle="tab">COT Analysis</a>
+                <a href="#price-table" data-toggle="tab">Price Table</a>
             </li>
+
+			<li>
+				<a href="#cot" data-toggle="tab">COT Analysis</a>
+			</li>
             
             <li>
                 <a href="#volatility" data-toggle="tab">Volatility</a>
@@ -53,13 +57,65 @@
         </ul>
     
         <div class="tab-content">
-            <div class="tab-pane active" id="currency">
+            <div class="tab-pane active" id="price-chart">
                 <div id="chart"></div>
+            </div>
+
+            <div class="tab-pane" id="price-table">
+				<?php 
+					# var_dump($fx);
+					
+					if(empty($fx)){
+						echo '<div class="alret alert-warning">No FX data available</div>';
+					}
+					else{
+				?>
+				<table class="table table-bordered dt">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Open</th>
+							<th>High</th>
+							<th>Low</th>
+							<th>Close</th>
+							<th>Change</th>
+							<th>%Change</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php 
+							$prevClose = 0;
+
+							foreach($fx as $f){
+								$change = $prevClose == 0 ? '-' : $f->close - $prevClose;
+								$changePerc = $prevClose == 0 ? '-' : ($change / $prevClose) * 100;
+						?>
+						<tr>
+							<td><?php echo date('Y-m-d', strtotime($f->recordtime)) ?></td>
+							<td><?php echo $f->open ?></td>
+							<td><?php echo $f->high ?></td>
+							<td><?php echo $f->low ?></td>
+							<td><?php echo $f->close ?></td>
+							<td><?php echo round($change, 4) ?></td>
+							<td><?php echo round($changePerc, 2) ?></td>
+						</tr>
+						<?php
+								$prevClose = $f->close; 
+							}
+						?>
+					</tbody>
+				</table>
+
+				<hr/>
+
+				<?php
+					} # ENDFOR: Show COT data if available
+				?>
             </div>
 
             <div class="tab-pane" id="cot">
 				<?php 
-					# var_dump($cot)
+					# var_dump($cot);
 					
 					if(empty($cot)){
 						echo '<div class="alret alert-warning">No COT data available</div>';
@@ -134,35 +190,38 @@ const chart = LightweightCharts.createChart(document.getElementById('chart'), {
 	width: 1024,
 	height: 540,
 	layout: {
-		backgroundColor: '#000000',
-		textColor: 'rgba(255, 255, 255, 0.9)',
+		backgroundColor: '#ffffff',
+		textColor: '#000000'
 	},
-	grid: {
-		vertLines: {
-			color: 'rgba(0,0,0,0)',
-		},
-		horzLines: {
-			color: '#222222',
-		},
+	priceScale: {
+		borderColor: 'rgba(197, 203, 206, 1)',
+		textColor: '#000000'
+	},
+	timeScale: {
+		borderColor: 'rgba(197, 203, 206, 1)',
 	},
 	crosshair: {
 		mode: LightweightCharts.CrosshairMode.Normal,
 	},
-	priceScale: {
-		borderColor: 'rgba(197, 203, 206, 0.8)',
-	},
-	timeScale: {
-		borderColor: 'rgba(197, 203, 206, 0.8)',
-	}
+	handleScroll: {
+        mouseWheel: false,
+        pressedMouseMove: true
+    },
+    handleScale: {
+        axisPressedMouseMove: true,
+        mouseWheel: false,
+        pinch: true
+    }
 });
 const data = JSON.parse(`<?php echo json_encode($entries) ?>`)
 let candleSeries = chart.addCandlestickSeries({
-	upColor: 'rgba(255, 144, 0, 1)',
+	/*upColor: 'rgba(255, 144, 0, 1)',
 	downColor: '#000',
 	borderDownColor: 'rgba(255, 144, 0, 1)',
 	borderUpColor: 'rgba(255, 144, 0, 1)',
 	wickDownColor: 'rgba(255, 144, 0, 1)',
-	wickUpColor: 'rgba(255, 144, 0, 1)',
+	wickUpColor: 'rgba(255, 144, 0, 1)'
+	*/
 });
 
 candleSeries.applyOptions({

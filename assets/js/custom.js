@@ -3,9 +3,10 @@ $(document).ready(function () {
 
     if(dt.length > 0){
 
-        $('.dt').dataTable({
-            bSort: false, // Prevent autosort
+        $('.dt').DataTable({
+            // bSort: false,
             dom: 'Bfrtip',
+            order: [[0, 'desc']],
             //lengthChange: false,
             lengthMenu: [
                 [10, 25, 50, 75, 100, -1],

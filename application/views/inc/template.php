@@ -159,7 +159,7 @@
             'assets/js/jquery.min.js',
             'assets/js/bootstrap.min.js',
             'assets/js/datatables.min.js',
-            'assets/js/custom.js'
+            'assets/js/custom.js?t='. date('His')
         );
         
         foreach($scripts as $script){
