@@ -4,7 +4,6 @@
 
 Fundamental trading monitor. Fetches data and presents analysis of the current market conditions:
 
-
 ### Features
 
 - Volatility Assessment
@@ -12,6 +11,24 @@ Fundamental trading monitor. Fetches data and presents analysis of the current m
 - Watchlist
 - Trading Journal
 
+### TODO
+
+- Realized (Historical) Volatility
+  - Distribution of Returns (DoR)
+  - Average True Range Percentage (ATRP)
+- Implied Volatility
+  - VIX chart analysis
+  - Implied Volatility Calculator
+
+## Data Import
+
+Source: Yahoo Finance
+
+1. Go to https://finance.yahoo.com
+2. Search for instrument ticker symbol e.g. `AAPL` for Apple
+3. Click on `Historical Data` tab
+4. In the `Time Period` filter, set to desired timeframe and click `Download`
+5. Open downloaded CSV file and convert to Excel to preserve calculations
 
 ### Resources:
 
